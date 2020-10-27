@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Capacitación en R y herramientas de productividad</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="" />
+    <meta name="date" content="2020-10-27" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: center, middle
+
+.linea-superior[]
+.linea-inferior[]
+
+&lt;img src="imagenes/logo_portada2.png" width="200" /&gt;
+
+## Capacitación en R y herramientas de productividad
+
+## Proyecto Estratégico Servicios Compartidos para la Producción Estadística
+
+## Procesamiento de bases de datos (1)
+
+### Octubre 2020
+
+
+
+
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Contenidos de hoy
+
+El objetivo de esta sesión es aprender a manipular data frame.
+
+Para cumplir con el objetivo, revisaremos los siguientes temas:
+
+--
+
+- Importación de datos desde distintos formatos a R.
+
+--
+
+- Introducción a **dplyr**.
+
+--
+
+- Manipulación básica de columnas (`select()`, `rename()`).
+
+--
+
+- Manipulación básica de filas (`arrange()`, `filter()`).
+
+--
+
+- Herramientas básicas de edición de datos (`if_else()`, `mutate()`).
+
+---
+
+background-image: url("imagenes/import.jpg")
+background-size: cover
+class: center, bottom, inverse
+
+# Importación de datos
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Importación de datos
+
+**R** tiene distintos paquetes para importar datos, diferenciando la extensión
+de los archivos.
+
+--
+
+Estos archivos pueden ser asignados a un objeto.
+
+--
+
+En esta sesión veremos como importar:
+
+    - Archivos de STATA (.dta) y de SPSS (.sav).
+    
+    - Archivos de texto plano delimitados (.csv).
+    
+    - Archivos de excel (.xlsx, .xls).
+--
+Para importar archivos guardados desde STATA o SPSS, existe el paquete `haven`.
+
+
+.center[&lt;img src="imagenes/logo_haven.png" width="200" /&gt;]
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Importación de datos
+
+El paquete **`haven`** forma parte del universo de **`tidyverse`**, pero a 
+diferencia de otros paquetes de ese universo, es necesario cargar la librería
+para poder usar las funciones asociadas.
+
+--
+
+Las funciones incluídas consideran un lenguaje bastante explícito:
+
+- STATA: `read_dta()` permite importar archivos con extensión ".dta".
+
+- SPSS: `read_sav()` permite importar archivos con extensión ".sav".
+
+--
+
+
+```r
+library(haven)
+# El archivo se puede cargar desde una carpeta...
+esi &lt;- read_dta(file = "C:/Users/usuario/Desktop/esi-2019---personas.dta")
+# ...o desde un sitio web
+esi &lt;- read_sav(file = "http://www.ine.cl/docs/default-source/encuesta-suplementaria-de-ingresos/bbdd/spss_esi/2019/esi-2019---personas.sav")
+```
+
+--
+
+El argumento "file" en estas funciones indica la dirección y el nombre del 
+archivo a importar a **R**.
+
+La dirección del archivo debe utilizar **forward-slash** ("/") en vez de
+**backslash** ("\").
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Importación de datos
+
+Si queremos trabajar con más de un archivo, y cada uno de ellos se encuentra 
+en la misma carpeta de nuestra computador, ¿es posible establecer un "atajo" 
+al momento de importar los archivos?
+
+--
+
+- Directorio de trabajo
+
+El directorio o carpeta de trabajo es el lugar en nuestra computadora donde R 
+buscará archivos para importarlos y al que serán exportados.
+
+--
+
+Para identificar cuál es la ruta del directorio que está usando R se debe 
+utilizar la función `getwd()`.
+
+
+```r
+getwd()
+```
+
+```
+## [1] "C:/Users/elgra/Desktop/Trabajo/SSCC/Generación 2/Sesión_2"
+```
+
+--
+
+Es posible cambiar el directorio de trabajo usando la función `setwd()`.
+
+
+```r
+getwd("C:/Users/elgra/Desktop/")
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Importación de datos
+
+Volvamos a la importación de datos...
+
+--
+
+- Importación de archivos de texto plano delimitados
+
+--
+
+Si el archivo que queremos importar corresponde a un archivo de texto plano 
+delimitado, el universo de `tidyverse` cuenta con el paquete **`readr`**.
+
+--
+
+Entre las funciones de `readr` se encuentran:
+
+  - **`read_csv()`**: se utiliza para importar archivos delimitados por coma.
+    
+  - **`read_csv2()`**: se utiliza para importar archivos delimitados por punto 
+  y coma. Este tipo de delimitación se utiliza cuando la coma se utiliza para 
+  separar números decimales.
+    
+  - **`read_delim()`**: se utiliza para importar archivos planos con cualquier 
+    delimitador. Al usar esta función es necesario definir el argumento 
+    `delim`, para identificar el tipo de delimitador.
+
+--
+
+Todas estas funciones tienen una sintaxis similar.
+
+
+```r
+library(readr)
+esi &lt;- read_csv2(file = "data/esi-2019---personas.csv")
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Importación de datos
+
+Estas funciones emplean la primera línea de los datos para los nombres de las 
+columnas.
+
+--
+
+En caso que los datos no incluyan los nombres, se puede agregar el argumento 
+`col_names` = FALSE, y la función entenderá que se deberán crear nombres 
+ficticios, etiquetados secuencialmente desde X1 a Xn.
+
+--
+
+- Importación de archivos de Excel
+
+--
+
+El paquete `readxl` nos permite importar archivos de Excel.
+
+Una de sus funciones es `read_excel()`, y al igual que las funciones vistas 
+previamente, se debe definir el argumento donde se encuentra el archivo, que 
+en esta función se llama `path`.
+
+A diferencias de los otros tipos de archivos que hemos visto, los libros de 
+excel pueden contar con más de una hoja; el argumento `sheet` se utiliza para 
+definir hojaque se importará.
+
+
+```r
+library(readxl)
+esi &lt;- read_excel(path = "data/esi-2019---personas.xlsx",
+                  sheet = "Hoja1")
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Importación de datos
+
+- Importación de archivos de R
+
+--
+
+Los archivos de R poseen la extensión ".RData".
+
+--
+
+La función `load()` se utiliza para cargar el archivo.
+
+--
+
+No es necesario cargar librerías para poder utilizar la función.
+
+--
+
+No se debe asignar el valor al objeto a cargar.
+
+--
+
+**Importante**: estos archivos pueden incluir más de un objeto.
+
+
+
+```r
+load(file = "data/esi-2019---personas.RData")
+```
+
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Importación de datos
+
+Un pequeño ejercicio...
+
+- Cargue el archivo "ene-2019-11.csv" (se utiliza "," para separar los valores)
+
+- Asigne al objeto "ene" el archivo cargado.
+
+- Identifique la clase del objeto "ene".
+
+- Identifique las dimensiones del objeto "ene".
+
+--
+
+
+```r
+library(readr)
+ene &lt;- read.csv(file = "data/ene-2019-11.csv")
+class(ene)
+```
+
+```
+## [1] "data.frame"
+```
+
+```r
+dim(ene)
+```
+
+```
+## [1] 96240   144
+```
+
+---
+
+background-image: url("imagenes/transformer.gif")
+background-size: cover
+class: center, bottom, inverse
+
+# Transformación de datos
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## El paquete `dplyr`
+
+.pull-left[
+
+Para la manipulación de los data frames existe un paquete llamado **`dplyr`**.
+
+Este paquete fue desarrollado por Hardley Wickman de RStudio.
+
+Es una versión optimizada de un paquete anterior llamado `plyr`.
+ 
+El paquete `dplyr` proporciona una "gramática" (particularmente verbos) para la 
+manipulación y operaciones con data frames.
+ 
+Los paquetes `dplyr`, `readr`, `readxl` y `haven` forman parte del universo de 
+[`tidyverse`](https://www.tidyverse.org).
+
+]
+
+.pull-right[
+.center[
+![](https://d33wubrfki0l68.cloudfront.net/071952491ec4a6a532a3f70ecfa2507af4d341f9/c167c/images/hex-dplyr.png)
+]
+]
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+Durante esta sesión veremos algunas funciones del paquete **`dplyr`**, que se 
+utilizan para la manipulación de data frames.
+
+--
+
+**Manipulación básica de columnas**
+
+--
+
+- **`select()`**: selecciona y devuelva un conjunto de columnas.
+
+--
+
+- **`rename()`**: renombra variables en un data frame.
+
+--
+
+**Manipulación básica de filas**
+
+--
+
+- **`arrange()`**: reordena filas de un data frame.
+
+--
+
+- **`filter()`**: selecciona y devuelve un conjunto de filas según una o varias 
+condiciones lógicas.
+
+--
+
+**Herramientas básicas de edición de datos**
+
+--
+
+- **`if_else()`**: evaluación de condiciones, y asignación de valores.
+
+--
+
+- **`mutate()`**: añade nuevas variables o transforma variables existentes.
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+Todas estas funciones tienen en común una serie de argumentos:
+
+--
+
+- El primer argumento es el data frame a manipular.
+
+--
+
+- Los otros argumentos describen que hacer con el data frame especificado en el 
+primer argumento.
+
+--
+
+- El valor de retorno de la función es un nuevo data frame.
+
+--
+
+Estas funciones serán algunas de nuestras mejores compañeras y siempre nos 
+acompañarán en nuestro camino de programación.
+
+--
+
+Como veremos en esta sesión, una de las principales ventajas de estas funciones 
+es que podemos referirnos a las columnas en el data frame directamente sin 
+utilizar el operador "**$**", es decir, solo con el nombre de la variable.
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`select()`**
+
+--
+
+Esta función es utilizada para seleccionar columnas dentro de un data frame.
+
+--
+
+El resultado de esta función corresponde a un data frame que solo incluye las 
+variables seleccionadas.
+
+--
+
+El orden de las variables corresponde al orden seleccionado.
+
+--
+
+.center[
+&lt;img src="imagenes/select.png" width="300" /&gt;
+]
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`select()`**
+
+Existen múltiples formas de seleccionar las columnas utilizando esta función.
+
+--
+
+- Selección de las columnas a través del nombre de los campos.
+
+--
+
+
+```r
+library(dplyr)
+head(select(ene, ano_encuesta, mes_encuesta, cae_especifico, b1, b14_rev4cl_caenes),
+     n = 3)
+```
+
+```
+##   ano_encuesta mes_encuesta cae_especifico b1 b14_rev4cl_caenes
+## 1         2019           10             17 NA                NA
+## 2         2019           10             17 NA                NA
+## 3         2019           10              7  7                 2
+```
+
+--
+
+- Selección de las columnas a través de la posición que ocupan en el data frame.
+
+--
+
+
+```r
+head(select(ene, 1, 2, 3, 4, 5),
+     n = 3)
+```
+
+```
+##     idrph ano_trimestre mes_central id_identificacion id_directorio
+## 1  808409          2019          11            173296         21343
+## 2  808410          2019          11            173296         21343
+## 3 1100843          2019          11            235727         16373
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`select()`**
+
+- Selección de las columnas a través de rangos.
+    - Estos rangos se pueden definir a través de los nombres de campos o de las 
+    posiciones.
+
+--
+
+
+```r
+head(select(ene, c(idrph:mes_central)), n = 3)
+```
+
+```
+##     idrph ano_trimestre mes_central
+## 1  808409          2019          11
+## 2  808410          2019          11
+## 3 1100843          2019          11
+```
+
+--
+
+- Selección negativa utilizando el signo "-" antes de la variable.
+    - Consiste en seleccionar las variables que no queremos en la base final.
+
+--
+
+
+```r
+head(select(ene, -c(4:dim(ene)[2])), n = 3)
+```
+
+```
+##     idrph ano_trimestre mes_central
+## 1  808409          2019          11
+## 2  808410          2019          11
+## 3 1100843          2019          11
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`select()`**
+
+A continuación un resumen de las principales funciones auxiliares que se pueden 
+utilizar con `select()`:
+
+- "**-**": se utiliza para identificar los campos a excluir de la selección.
+
+- "**:**": se utiliza para definir un rango.
+
+- **contains()**: selecciona variables cuyo nombre contiene la cadena de 
+texto definida.
+
+- **ends_with()**: selecciona variables cuyo nombre termina con la cadena de 
+texto definida,
+
+- **start_with()**: selecciona variables cuyo nombre comienza con la cadena de 
+texto definida,
+
+- **matches()**: selecciona las variables cuyos nombres coinciden con una 
+[*expresión regular*](https://rpubs.com/ydmarinb/429756).
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+Dos pequeños ejercicios...
+
+--
+
+1. Seleccione las variables idrph, edad, sexo, cine.
+  
+--
+
+
+```r
+head(select(ene, idrph, edad, sexo, cine), n = 3)
+```
+
+```
+##     idrph edad sexo cine
+## 1  808409   79    1    5
+## 2  808410   71    2    8
+## 3 1100843   53    1    5
+```
+
+--
+
+2. Seleccione la variable idrph y las variables que terminen en "caenes"
+
+--
+  
+
+```r
+head(select(ene, idrph, ends_with("caenes")), n = 3)
+```
+
+```
+##     idrph b13_rev4cl_caenes b14_rev4cl_caenes e18_rev4cl_caenes
+## 1  808409                NA                NA                15
+## 2  808410                NA                NA                16
+## 3 1100843                 3                 2                NA
+##   r_p_rev4cl_caenes
+## 1                NA
+## 2                NA
+## 3                 3
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`rename()`**
+
+--
+
+Si necesitamos renombrar una variable (columna) de un data frame, existen 
+múltiples formas y varias muy complejas.
+
+--
+
+La función `rename()` permite editar el nombre de una variable de una manera 
+sencilla, y sin afectar al resto de variables.
+
+--
+
+Esta función permite renombrar más de una variable a la vez.
+
+--
+
+Si queremos obtener el nombre de las variables de un data frame, se utiliza la 
+función `names()`
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`rename()`**
+
+A continuación se mostrarán dos formas de renombrar variables...
+
+--
+
+
+```r
+ene_5 &lt;- select(ene, idrph, edad, sexo, cine)
+names(ene_5)
+```
+
+```
+## [1] "idrph" "edad"  "sexo"  "cine"
+```
+
+--
+
+...a través del lenguaje base
+
+--
+
+
+```r
+names(ene_5)[names(ene_5) == "sexo"] &lt;- "sex"
+names(ene_5)
+```
+
+```
+## [1] "idrph" "edad"  "sex"   "cine"
+```
+
+--
+
+...a través de `rename()`
+
+--
+
+
+```r
+names(rename(ene_5, identificador = idrph, niveleducacional = cine))
+```
+
+```
+## [1] "identificador"    "edad"             "sex"              "niveleducacional"
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Uso de **pipes** (**`%&gt;%`**)
+
+Como hemos visto hasta ahora, estas funciones siguen la misma estructura:
+
+    - Primer argumento: data frame sobre el que se aplica la función.
+    
+    - Resto de argumentos: elementos del data frame sobre los cuales actua
+    la función.
+    
+--
+
+Lo anterior nos puede hacer pensar: **¿es posible encadenar estas funciones?**.
+
+--
+
+Si...
+--
+si se puede, utilizando el operador **`%&gt;%`** (llamado **pipe**).
+
+---
+
+background-image: url("imagenes/pipes.jpg")
+background-size: cover
+class: center, bottom, inverse
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Uso de **pipes** (**`%&gt;%`**)
+
+El operador **%&gt;%** nos permite tomar el resultado de una función y mandarlo 
+directamente a la siguiente función, concatenando acciones.
+
+--
+
+Se puede leer como "luego" o "a continuación".
+
+--
+
+Este operador nos ayudará enormemente a mejor la legibilidad de un código.
+
+--
+
+El atajo en Windows para escribir `pipes` es: ctrl + shift + m.
+
+En Mac es: cmd + shift + m
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Uso de **pipes** (**`%&gt;%`**)
+
+Para utilizar los pipes, es necesario seguir la siguiente estructura:
+
+
+```r
+df %&gt;% # data frame sobre el que se ejecutará la función
+  funcion() %&gt;% # esta función se aplica sobre el data frame "df"
+  funcion() # esta función se aplica sobre el resultado de la función anterior
+```
+
+--
+
+Utilizando pipes, el resultado del ejercicio de renombrar es posible escribirlo 
+de la siguiente manera:
+
+--
+
+
+```r
+ene_6 &lt;- ene %&gt;%
+  select(idrph, edad, sexo, cine) %&gt;%
+  rename(identificador = idrph, niveleducacion = cine)
+names(ene_6)
+```
+
+```
+## [1] "identificador"  "edad"           "sexo"           "niveleducacion"
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`filter()`**
+
+--
+
+Esta función se utiliza para filtrar un data frame según alguna condición a 
+definir.
+
+--
+
+Así como la función `select()` es utilizada para seleccionar columnas de un 
+data frame, la función `filter()` es utilizada para seleccionar las filas de 
+un data frame.
+
+--
+
+.center[
+&lt;img src="imagenes/filter.png" width="400" /&gt;
+]
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`filter()`**
+
+Al aplicar esta función, los resultados que quedarán en el dataframe resultante 
+serán solo aquellos en los que se cumpla la condición definida. Por ejemplo...
+
+--
+
+...el número de filas del data frame "ene" es:
+
+--
+
+
+```r
+dim(ene)
+```
+
+```
+## [1] 96240   144
+```
+
+--
+
+...mientras que el número de filas del data frame "ene" que corresponde al mes 
+de encuestaje de diciembre es:
+
+--
+
+
+```r
+dim(ene %&gt;% filter(mes_encuesta == 12))
+```
+
+```
+## [1] 34402   144
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`filter()`**
+
+Las condiciones para filtrar un data frame pueden ser construidas mediante 
+operadores relacionales.
+
+--
+
+A continuación se presenta un listado de operadores relacionales:
+
+--
+
+- "**&lt;**": menor que
+- "**&gt;**": mayor que
+- "**==**": igual que
+- "**&lt;=**": menor o igual que
+- "**&gt;=**": mayor o igual que
+- "**!=**": diferente que
+- "**%in%**": pertenece al conjunto
+- "**is.na**": es NA
+- "**!is.na**": no es NA
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`filter()`**
+
+¿Es posible filtrar un data frame por más de una condición al mismo tiempo?
+
+--
+
+**Si**, es posible utilizando **operadores lógicos**.
+
+--
+
+Estos operadores se utilizan para analizar el valor de verdad de dos sentencias.
+
+--
+
+Algunos operadores lógicos o booleanos son:
+
+--
+
+- "**&amp;**": conjunción y
+- "**|**": conjunción o
+- "**!**": operador no
+- "**any**": al menos una sentencia es verdadera
+- "**all**": todas las sentencias son verdaderas
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`filter()`**
+
+Algunos ejemplos...
+
+--
+
+- Obtener el número de filas de registros con edad mayor a 50 y cuyo 
+grupo ocupacional corresponde a profesionales (b1 == 2).
+
+--
+
+
+```r
+dim(ene %&gt;% filter(edad &gt; 50 &amp; b1 == 2))
+```
+
+```
+## [1] 1225  144
+```
+
+--
+
+- Obtener el número de filas de registros que cumplan al menos una de las 
+dos relaciones siguiente:
+    
+    - Mujeres (sexo == 2) de la región 6.
+    - Hombres (sexo == 1) de la región 12.
+
+--
+
+
+```r
+dim(ene %&gt;% filter(sexo == 2 &amp; region == 6 | sexo == 1 &amp; region == 12))
+```
+
+```
+## [1] 4023  144
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`arrange()`**
+
+--
+
+Esta función se utiliza para reordenar las filas de un data frame.
+
+--
+
+- El orden se puede realizar según una o más variables.
+
+--
+
+- El reordenamiento se realiza según el orden de las columnas seleccionadas.
+
+--
+
+- Por defecto, el orden es ascendente.
+
+--
+
+- Para ordenar de manera descendente se debe utilizar la función auxiliar 
+`desc()`.
+
+
+```r
+library(guaguas)
+head(guaguas %&gt;% arrange(desc(n)), n = 3)
+```
+
+```
+## # A tibble: 3 x 5
+##    anio sexo  nombre     n proporcion
+##   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;  &lt;int&gt;      &lt;dbl&gt;
+## 1  1955 F     María  21448     0.0862
+## 2  1956 F     María  21014     0.0834
+## 3  1965 F     María  20382     0.0639
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+Algunos ejercicios sobre lo visto hasta ahora en clases...
+
+--
+
+- Utilizando la base de guaguas, filtre según su año de nacimiento, su sexo de 
+nacimiento, y luego ordene el resultado por la variable "n", de forma 
+descendente.
+
+- Utilice la función "head", con el argumento "n == 5", e identifique cuantos 
+nombres de los 5 más repetidos comienzan con la letra "M".
+
+--
+
+
+```r
+library(guaguas)
+head(guaguas %&gt;%
+       filter(sexo == "M", anio == 1990) %&gt;%
+       arrange(desc(n)), n = 5)
+```
+
+```
+## # A tibble: 5 x 5
+##    anio sexo  nombre        n proporcion
+##   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;int&gt;      &lt;dbl&gt;
+## 1  1990 M     Juan       5839     0.0185
+## 2  1990 M     José       5461     0.0173
+## 3  1990 M     Luis       4634     0.0147
+## 4  1990 M     Sebastián  4632     0.0147
+## 5  1990 M     Francisco  4468     0.0142
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`mutate()`**
+
+Esta función tiene la finalidad de realizar transformaciones sobre los valores 
+de un data frame.
+
+--
+
+Algunas de las transformaciones posibles son:
+
+--
+
+- Cambiar el formato de una variable.
+
+Por ejemplo: modificar el formato de la variable "idrph" a character.
+
+--
+
+
+```r
+class(ene$idrph)
+```
+
+```
+## [1] "integer"
+```
+
+--
+
+
+```r
+ene &lt;- ene %&gt;% mutate(idrph = as.character(idrph))
+```
+
+--
+
+
+```r
+class(ene$idrph)
+```
+
+```
+## [1] "character"
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`mutate()`**
+
+- Modificar el valor de alguna variable.
+
+--
+
+Esta función también nos permite crear nuevas variables en un data frame.
+
+--
+
+Con esta función se pueden combinar funciones básicas para realizar operaciones 
+sobre las variables.
+
+--
+
+Con `mutate()` podemos editar y/o crear más de una variable. Es necesario 
+separar las instrucciones entre variables con una coma.
+
+--
+
+Al trabajar sobre más de una variable, la función primero trabajará sobre 
+la primera instrucción previa a la primera coma que separe las instrucciones, 
+luego, avanzará sobre la siguiente.
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`mutate()`**
+
+Ejemplo
+
+--
+
+
+```r
+df &lt;- data.frame(x = c(1, 2),
+                 y = c(5, 5))
+print(df)
+```
+
+```
+##   x y
+## 1 1 5
+## 2 2 5
+```
+
+```r
+df &lt;- df %&gt;%
+  mutate(y = 10,
+         a = paste(x, "por", y, sep = " "),
+         z = x*y)
+print(df)
+```
+
+```
+##   x  y        a  z
+## 1 1 10 1 por 10 10
+## 2 2 10 2 por 10 20
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`mutate()`**
+
+--
+
+Como pudimos ver, las variables creadas son agregadas al final del data frame.
+
+--
+
+¿Es posible definir la posición donde serán agregadas?
+
+--
+
+Si, agregando el argumento ".before" o el argumento ".after".
+
+--
+
+
+```r
+df &lt;- df %&gt;% mutate(w = "ejemplo", .before = x)
+print(df)
+```
+
+```
+##         w x  y        a  z
+## 1 ejemplo 1 10 1 por 10 10
+## 2 ejemplo 2 10 2 por 10 20
+```
+
+--
+
+El paquete `dplyr` también cuenta con la función `relocate()` que nos permite 
+ordenar algunas columnas dentro de un data frame.
+
+
+```r
+df %&gt;% relocate(c(w, a), .before = x)
+```
+
+```
+##         w        a x  y  z
+## 1 ejemplo 1 por 10 1 10 10
+## 2 ejemplo 2 por 10 2 10 20
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`mutate()`**
+
+Hasta ahora hemos visto como crear variables donde todas las filas cumplan las 
+mismas condiciones, pero no siempre es así. **¿Cómo podemos trabajar cuando **
+**la creación de una variable depende del valor de otra?**
+
+--
+
+Por ejemplo:
+
+--
+
+    - Si la variable sexo es igual a 1, asigne tal valor, en cambio, si la 
+    variable sexo es igual a 2, asigne otro valor.
+    
+    - Si la variable región es igual a 1, 15, 2, la variable zona tendrá el 
+    valor "norte", en cambio si la variable es igual a 12, la variable zona 
+    tendrá el valor "sur".
+
+--
+
+Esto se puede realizar utilizando una función llamada `if_else()`, cuyo 
+objetivo es evaluar el valor de verdad de una sentencia, y luego entregar un 
+resultado según ese valor. Esta función se puede utilizar junto a la función 
+`mutate()`.
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`mutate()`**
+
+La función `if_else()` trabaja con los siguientes argumentos:
+
+--
+
+- **condition**: corresponde a la sentencia a evaluar.
+
+--
+
+- **true**: indica el valor a asignar si la sentencia es verdadera.
+
+--
+
+- **false**: indica el valor a asignar si la sentencia es falsa.
+
+--
+
+- **missing**: indica el valor a asignar si la sentencia es missing.
+
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`mutate()`**
+
+La función **if_else()** actúa sobre cada fila, y otorga un valor distinto a 
+cada celda dependiendo del valor de verdad por fila.
+
+Ejemplo: recodificar la categoría 10 de la variable b1 y asignarle el valor 0.
+
+--
+
+
+```r
+ene &lt;- ene %&gt;% mutate(b1 = if_else(b1 == 10, 0, as.double(b1)))
+table(ene$b1)
+```
+
+```
+## 
+##    0    1    2    3    4    5    6    7    8    9 
+##  204 1099 4944 4994 1915 9215 2203 5294 3567 9421
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Función **`mutate()`**
+
+Entre las funciones básicas de R, existe la función `ifelse()`, la cual es 
+menos estricta que `if_else()`, pero no tiene un tratamiento especial para los 
+missings.
+
+--
+
+La función `ifelse()` base solo trabaja con tres argumentos: "test", "yes" y 
+"no".
+
+--
+
+
+```r
+df2 &lt;- data.frame(x = c(1, 2, NA))
+```
+
+--
+
+
+```r
+df2 %&gt;% mutate(y = if_else(condition = (x == 1), true = "valido", 
+                           false = "no valido", missing = "missing"))
+```
+
+```
+##    x         y
+## 1  1    valido
+## 2  2 no valido
+## 3 NA   missing
+```
+
+--
+
+
+```r
+df2 %&gt;% mutate(y = ifelse(test = (x == 1), yes = "valido", no = "no valido"))
+```
+
+```
+##    x         y
+## 1  1    valido
+## 2  2 no valido
+## 3 NA      &lt;NA&gt;
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+## Ejercicio final
+
+Cree el data frame df3...
+
+
+```r
+df3 &lt;- data.frame(x = c(1, 2, NA, 5),
+                  y = c(2, 4, 0, 15))
+```
+
+Luego...
+
+- Edite la variable "x", de forma tal que el valor missing tome el valor 0.
+
+- Genere la variable "division", que sea igual a la división entre "y" y "x".
+
+- Filtre los casos donde division sea distinto de 2.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
