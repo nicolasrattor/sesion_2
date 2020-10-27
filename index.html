@@ -169,7 +169,7 @@ getwd()
 ```
 
 ```
-## [1] "C:/Users/elgra/Desktop/Trabajo/SSCC/Generación 2/Sesión_2"
+## [1] "C:/Users/elgra/Desktop/Trabajo/SSCC/Generación 2/sesion_2"
 ```
 
 --
@@ -630,7 +630,7 @@ Dos pequeños ejercicios...
 
 --
 
-1. Seleccione las variables idrph, edad, sexo, cine.
+- Seleccione las variables idrph, edad, sexo, cine.
   
 --
 
@@ -648,7 +648,7 @@ head(select(ene, idrph, edad, sexo, cine), n = 3)
 
 --
 
-2. Seleccione la variable idrph y las variables que terminen en "caenes"
+- Seleccione la variable idrph y las variables que terminen en "caenes"
 
 --
   
@@ -1226,6 +1226,9 @@ print(df)
 ## 2 2 5
 ```
 
+--
+
+
 ```r
 df &lt;- df %&gt;%
   mutate(y = 10,
@@ -1464,6 +1467,168 @@ Luego...
 - Genere la variable "division", que sea igual a la división entre "y" y "x".
 
 - Filtre los casos donde division sea distinto de 2.
+
+
+```r
+df3 %&gt;%
+  mutate(x = if_else(is.na(x), 0, x),
+         division = y / x) %&gt;%
+  filter(division != 2)
+```
+
+```
+##   x  y division
+## 1 5 15        3
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Ejercicio para la 🏠
+
+1- Utilizando la base **ene-2019-11.csv**, generar la variable "tramos_edad_s2",
+la que tomará valores dependiendo de las siguientes instrucciones:
+
+- Tomará el valor 1, si la edad es menor que 15.
+
+- Tomará el valor 2, si la edad es mayor o igual a 15.
+
+- Tomará el valor 0, si la variable sexo es igual a 1.
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Ejercicio para la 🏠
+
+2- Utilizando la base **ene-2019-11.csv**, calcularemos la tasa de ocupación 
+para el trimestre móvil OND2019. Para poder obtener este resultado, es 
+necesario que conozcan dos funciones: 
+
+- La función `sum()`: utilizada para sumar los valores de una variable (suma 
+de la columna).
+
+- La función `row_number()`: utilizada para asignarle un valor a cada fila 
+igual a la posición que ocupan en el data frame.
+
+--
+
+
+```r
+data.frame(x1 = c(1, 3), x2 = c(2, NA)) %&gt;%
+  mutate(total_x1 = sum(x1),
+         # el argumento "na.rm" se utiliza para no considerar los missing
+         total_x2 = sum(x2, na.rm = T),
+         fila = row_number())
+```
+
+```
+##   x1 x2 total_x1 total_x2 fila
+## 1  1  2        4        2    1
+## 2  3 NA        4        2    2
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Ejercicio para la 🏠
+
+Ahora que conocen las dos funciones, deberán realizar las siguientes tareas:
+
+- Seleccionar solo las siguientes variables: sexo, edad, region, 
+cae_especifico, fact_cal.
+
+- Generar una variable llamada "pet", la cual tomará el valor "fact_cal" si 
+la variable edad es mayor o igual a 15. En caso contrario, el valor de "pet" 
+será cero.
+
+- Generar una variable llamada "ocu", la cual tomará el valor "fact_cal" si 
+la variable cae_especifico se encuentra entre 1 y 7 (extremos incluidos), y 
+tomará el valor cero en caso contrario.
+
+- Generar una variable llamada "total_pet", que corresponderá a la suma total 
+de la variable "pet" (utilizar la función `sum()`).
+
+- Generar una variable llamada "total_ocu", que corresponderá a la suma total 
+de la variable "ocu" (utilizar la función `sum()`).
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Ejercicio para la 🏠
+
+- Generar una variable llamada "tasa", que corresponda a la división de 
+las variables "total_ocu" y "total_pet"; el resultado de la división, 
+multiplicarlo por 100.
+
+- Generar una variable "fila" que indique el número de fila de cada registro 
+(usar la función `row_number()`).
+
+- Filtrar la base y solo dejar la primera fila.
+
+- Crear variable "periodo", cuyo valor sea "OND2019".
+
+- Renombrar las variables:
+    - A la variable "total_pet", nombrarla "pob_edad_trab"
+    - A la variable "total_ocu", nombrarla "ocupads"
+    - A la variable "tasa", nombrarla "tasa_ocup".
+    
+- Seleccionar las siguientes variables: periodo, ocupads, pob_edad_trab, 
+tasa_ocup
+
+- Utilizar la función `head()` para mirar la primera fila.
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Referencias
+
+Nada de esto sería posible sin:
+
+- [`R fot Data Science, de Hadley Wickham`](https://r4ds.had.co.nz/)
+
+- [`Advanced R, de Hadley Wickham`](http://adv-r.had.co.nz/Introduction.html)
+
+- [`Data wrangling, exploration, and analysis with R, de Jenny Bryan`](https://stat545.com/index.html)
+
+- [`Introduction to R, de Data Carpentry`](https://datacarpentry.org/R-genomics/01-intro-to-R.html#functions)
+
+- [`Xaringan: Presentation Ninja, de Yihui Xie`](https://github.com/yihui/xaringan). Para generar esta presentación con la planilla ninja ⚔
+
+R for Data Science tiene una traducción al español realizada por la comunidad hispana de R:
+
+- [`R para ciencia de datos, de Hadley Wickham`](https://es.r4ds.hadley.nz/)
+
+---
+
+class: center, middle
+
+.linea-superior[]
+.linea-inferior[]
+
+&lt;img src="imagenes/logo_portada2.png" width="200" /&gt;
+
+## Capacitación en R y herramientas de productividad
+
+## Proyecto Estratégico Servicios Compartidos para la Producción Estadística
+
+## Procesamiento de bases de datos (1)
+
+### Octubre 2020
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
