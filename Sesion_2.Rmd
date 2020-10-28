@@ -46,7 +46,7 @@ background-position: 100% 0%
 
 # Contenidos de hoy
 
-El objetivo de esta sesión es aprender a manipular data frame.
+El objetivo de esta sesión es aprender a manipular data frames.
 
 Para cumplir con el objetivo, revisaremos los siguientes temas:
 
@@ -140,11 +140,11 @@ esi <- read_sav(file = "http://www.ine.cl/docs/default-source/encuesta-suplement
 
 --
 
-El argumento "file" en estas funciones indica la dirección y el nombre del 
+El argumento "file" en estas funciones indica la ruta y el nombre del 
 archivo a importar a **R**.
 
 La dirección del archivo debe utilizar **forward-slash** ("/") en vez de
-**backslash** ("\").
+**backslash** ("\"). Otra opción es utilizar un doble **backslash** ("\\")
 
 ---
 
@@ -179,7 +179,7 @@ getwd()
 Es posible cambiar el directorio de trabajo usando la función `setwd()`.
 
 ```{r, warning=FALSE, eval=FALSE}
-getwd("C:/Users/elgra/Desktop/")
+setwd("C:/Users/elgra/Desktop")
 ```
 
 ---
@@ -232,12 +232,12 @@ background-position: 100% 0%
 
 # Importación de datos
 
-Estas funciones emplean la primera línea de los datos para los nombres de las 
+Estas funciones emplean la primera fila de los datos para los nombres de las 
 columnas.
 
 --
 
-En caso que los datos no incluyan los nombres, se puede agregar el argumento 
+En caso de que los datos no incluyan los nombres, se puede agregar el argumento 
 `col_names` = FALSE, y la función entenderá que se deberán crear nombres 
 ficticios, etiquetados secuencialmente desde X1 a Xn.
 
@@ -255,7 +255,7 @@ en esta función se llama `path`.
 
 A diferencias de los otros tipos de archivos que hemos visto, los libros de 
 excel pueden contar con más de una hoja; el argumento `sheet` se utiliza para 
-definir hojaque se importará.
+definir hoja que se importará.
 
 ```{r, warning=FALSE, eval=FALSE}
 library(readxl)
@@ -383,7 +383,7 @@ utilizan para la manipulación de data frames.
 
 --
 
-- **`select()`**: selecciona y devuelva un conjunto de columnas.
+- **`select()`**: selecciona y devuelve un conjunto de columnas.
 
 --
 
@@ -430,7 +430,7 @@ Todas estas funciones tienen en común una serie de argumentos:
 
 --
 
-- Los otros argumentos describen que hacer con el data frame especificado en el 
+- Los otros argumentos describen qué hacer con el data frame especificado en el 
 primer argumento.
 
 --
@@ -498,7 +498,7 @@ Existen múltiples formas de seleccionar las columnas utilizando esta función.
 ```{r}
 library(dplyr)
 head(select(ene, ano_encuesta, mes_encuesta, cae_especifico, b1, b14_rev4cl_caenes),
-     n = 3)
+     n = 3) # el argumento n corresponde a la función "head"
 ```
 
 --
@@ -540,7 +540,7 @@ head(select(ene, c(idrph:mes_central)), n = 3)
 --
 
 ```{r}
-head(select(ene, -c(4:dim(ene)[2])), n = 3)
+head(select(ene, -c(4:length(ene))), n = 3)
 ```
 
 ---
@@ -900,7 +900,8 @@ Algunos ejemplos...
 --
 
 - Obtener el número de filas de registros con edad mayor a 50 y cuyo 
-grupo ocupacional corresponde a profesionales (b1 == 2).
+grupo ocupacional corresponde a profesionales científicos e intelectuales 
+(b1 == 2).
 
 --
 
@@ -975,14 +976,14 @@ nacimiento, y luego ordene el resultado por la variable "n", de forma
 descendente.
 
 - Utilice la función "head", con el argumento "n == 5", e identifique cuantos 
-nombres de los 5 más repetidos comienzan con la letra "M".
+nombres de los 5 más repetidos comienzan con la letra "J".
 
 --
 
 ```{r}
 library(guaguas)
 head(guaguas %>%
-       filter(sexo == "M", anio == 1990) %>%
+       filter(sexo == "M", anio == 1990) %>% # Hombres nacidos en 1990
        arrange(desc(n)), n = 5)
 ```
 
@@ -1084,7 +1085,6 @@ print(df)
 ```{r}
 df <- df %>%
   mutate(y = 10,
-         a = paste(x, "por", y, sep = " "),
          z = x*y)
 print(df)
 ```
@@ -1124,7 +1124,7 @@ El paquete `dplyr` también cuenta con la función `relocate()` que nos permite
 ordenar algunas columnas dentro de un data frame.
 
 ```{r}
-df %>% relocate(c(w, a), .before = x)
+df %>% relocate(c(w, z), .after = x)
 ```
 
 ---
@@ -1208,7 +1208,7 @@ Ejemplo: recodificar la categoría 10 de la variable b1 y asignarle el valor 0.
 --
 
 ```{r}
-ene <- ene %>% mutate(b1 = if_else(b1 == 10, 0, as.double(b1)))
+ene <- ene %>% mutate(b1 = if_else(b1 == 10, 0, as.numeric(b1)))
 table(ene$b1)
 ```
 
@@ -1258,6 +1258,61 @@ background-position: 100% 0%
 
 # Transformación de datos
 
+Algunas funciones importantes que se pueden utilizar en conjunto con `mutate()` 
+son:
+
+--
+
+- La función `sum()`: utilizada para sumar los valores de una variable (suma 
+de la columna).
+
+- La función `row_number()`: utilizada para asignarle un valor a cada fila 
+igual a la posición que ocupan en el data frame.
+
+- La función `mean()`: utilizada para obtener la media de una columna.
+
+- La función `max()`: utilizada para obtener el valor máximo de una variable.
+
+- La función `paste()`: utilizada para concatenar variables y/o strings.
+
+- La función `gsub()`: utilizada para reemplazar el valor de texto dentro de 
+una variable.
+
+- La función `nchar()`: utilizada para contar el número de caracter de una 
+variable.
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+A continuación, un ejemplo...
+
+--
+
+```{r}
+df4 <- data.frame(x1 = c(1, 2, 3, 4, NA),
+                  x2 = c(5, 13, -2, 1, 5),
+                  x3 = c("y_1", "y_2", "y_3", "y_4", "y_5"))
+df4 %>% mutate(
+  total = sum(x1),
+  total_x1 = sum(x1, na.rm = T), # con na.rm no se consideran los missing
+  media_x2 = mean(x2),
+  n_fila = row_number(),
+  x3_v2 = gsub("y", "v", x3))
+```
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
 ## Ejercicio final
 
 Cree el data frame df3...
@@ -1275,6 +1330,8 @@ Luego...
 
 - Filtre los casos donde division sea distinto de 2.
 
+--
+
 ```{r}
 df3 %>%
   mutate(x = if_else(is.na(x), 0, x),
@@ -1288,100 +1345,25 @@ background-image: url("imagenes/fondo2.PNG")
 background-size: contain;
 background-position: 100% 0%
 
-# Ejercicio para la 🏠
+# Ejercicios para la 🏠
 
-1- Utilizando la base **ene-2019-11.csv**, generar la variable "tramos_edad_s2",
-la que tomará valores dependiendo de las siguientes instrucciones:
+- Importar la base **ene-2019-11.csv**.
 
-- Tomará el valor 1, si la edad es menor que 15.
+- Seleccionar las variables: idrph, edad, sexo, b1 y las variables cuyo nombre 
+comienza con "cae_"
 
-- Tomará el valor 2, si la edad es mayor o igual a 15.
+- Renombrar la variable *cae_especifico* por *cse_especifico*.
 
-- Tomará el valor 0, si la variable sexo es igual a 1.
+- Generar la variable *tipo_ocupado* en base a las siguientes reglas:
 
----
-
-background-image: url("imagenes/fondo2.PNG")
-background-size: contain;
-background-position: 100% 0%
-
-# Ejercicio para la 🏠
-
-2- Utilizando la base **ene-2019-11.csv**, calcularemos la tasa de ocupación 
-para el trimestre móvil OND2019. Para poder obtener este resultado, es 
-necesario que conozcan dos funciones: 
-
-- La función `sum()`: utilizada para sumar los valores de una variable (suma 
-de la columna).
-
-- La función `row_number()`: utilizada para asignarle un valor a cada fila 
-igual a la posición que ocupan en el data frame.
-
---
-
-```{r}
-data.frame(x1 = c(1, 3), x2 = c(2, NA)) %>%
-  mutate(total_x1 = sum(x1),
-         # el argumento "na.rm" se utiliza para no considerar los missing
-         total_x2 = sum(x2, na.rm = T),
-         fila = row_number())
-```
-
----
-
-background-image: url("imagenes/fondo2.PNG")
-background-size: contain;
-background-position: 100% 0%
-
-# Ejercicio para la 🏠
-
-Ahora que conocen las dos funciones, deberán realizar las siguientes tareas:
-
-- Seleccionar solo las siguientes variables: sexo, edad, region, 
-cae_especifico, fact_cal.
-
-- Generar una variable llamada "pet", la cual tomará el valor "fact_cal" si 
-la variable edad es mayor o igual a 15. En caso contrario, el valor de "pet" 
-será cero.
-
-- Generar una variable llamada "ocu", la cual tomará el valor "fact_cal" si 
-la variable cae_especifico se encuentra entre 1 y 7 (extremos incluidos), y 
-tomará el valor cero en caso contrario.
-
-- Generar una variable llamada "total_pet", que corresponderá a la suma total 
-de la variable "pet" (utilizar la función `sum()`).
-
-- Generar una variable llamada "total_ocu", que corresponderá a la suma total 
-de la variable "ocu" (utilizar la función `sum()`).
-
----
-
-background-image: url("imagenes/fondo2.PNG")
-background-size: contain;
-background-position: 100% 0%
-
-# Ejercicio para la 🏠
-
-- Generar una variable llamada "tasa", que corresponda a la división de 
-las variables "total_ocu" y "total_pet"; el resultado de la división, 
-multiplicarlo por 100.
-
-- Generar una variable "fila" que indique el número de fila de cada registro 
-(usar la función `row_number()`).
-
-- Filtrar la base y solo dejar la primera fila.
-
-- Crear variable "periodo", cuyo valor sea "OND2019".
-
-- Renombrar las variables:
-    - A la variable "total_pet", nombrarla "pob_edad_trab"
-    - A la variable "total_ocu", nombrarla "ocupads"
-    - A la variable "tasa", nombrarla "tasa_ocup".
+    - Asignarle el valor "presente" en caso que la variable cse_especifico
+    se encuentre entre 1 y 4 (valores extremos incluidos).
+    - Asignarle el valor "ausente" en caso que la variable cse_especifico 
+    se encuentre entre 5 y 7 (extremos incluidos).
+    - Asignarle el valor "no ocupado" en cualquier otro caso.
     
-- Seleccionar las siguientes variables: periodo, ocupads, pob_edad_trab, 
-tasa_ocup
-
-- Utilizar la función `head()` para mirar la primera fila.
+- Obtener el número de ocupados ausentes codificados como "Directivos y 
+Gerentes" (b1 == 1).
 
 ---
 
