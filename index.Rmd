@@ -1,5 +1,5 @@
 ---
-title: "Capacitación en R y herramientas de productividad"
+title: "Capacitación en R"
 subtitle: "Sesión 2"
 author: 
 date: '`r Sys.Date()`'
@@ -21,13 +21,11 @@ class: center, middle
 
 <img src="imagenes/logo_portada2.png" width="200" />
 
-## Capacitación en R y herramientas de productividad
-
-## Proyecto Estratégico Servicios Compartidos para la Producción Estadística
+## Capacitación en R
 
 ## Procesamiento de bases de datos (1)
 
-### Octubre 2020
+### Diciembre 2020
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = TRUE)
@@ -69,6 +67,114 @@ Para cumplir con el objetivo, revisaremos los siguientes temas:
 --
 
 - Herramientas básicas de edición de datos (`if_else()`, `mutate()`).
+
+--
+
+
+Antes... revisaremos el **protocolo IPO** para organizar nuestro trabajo.
+
+---
+
+background-image: url("imagenes/IPO.png")
+background-size: cover
+class: center, bottom, inverse
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Protocolo IPO
+
+El protocolo [IPO](https://juancarloscastillo.github.io/ipo/index_es.html) es una plantilla de carpetas de proyecto basada en el protocolo [TIER](https://www.projecttier.org/).
+
+--
+
+Se basa en generar un conjunto de archivos auto-contenidos organizado en una estructura de proyecto que cualquier persona pueda compartir y ejecutar. 
+
+--
+
+.medium-par[En vez de compartir nuestro código, compartimos una gran carpeta con el código, los archivos de entrada (INPUT) y los archivos de salida (OUTPUT). De esta forma, otro investigador podrá "reproducir" nuestro procesamiento o análisis.]
+
+--
+
+![](imagenes/Estructura IPO.png)
+
+--
+
+.medium-par[Cuando utilizemos Rmarkdown esto será fundamental...]
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Directorios de trabajo
+
+Por ahora nos deja planteado el tema de la fijación de **directorios relativos**.
+
+--
+
+El directorio o carpeta de trabajo es el lugar en nuestra computadora donde R buscará archivos para importarlos y al que serán exportados.
+
+Para identificar cuál es la ruta del directorio que está usando R se debe utilizar la función `getwd()`.
+
+```{r, warning=FALSE}
+getwd()
+```
+
+--
+
+Es posible cambiar el directorio de trabajo usando la función `setwd()`.
+
+```{r, warning=FALSE, eval=FALSE}
+setwd("C:/Users/nicol")
+```
+
+```{r warning=FALSE, eval=FALSE, results=FALSE, echo=FALSE}
+setwd("C:/Users/nicol/OneDrive - Instituto Nacional de Estadisticas/GitHub/Capacitaciones R al DET/sesion_2")
+```
+
+--
+
+Cuando R esta cerrado, y uno abre un projecto o *script*, se fijará como directorio de trabajo la carpeta en la que se encuentra este código.
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Directorios de trabajo
+
+Recomendación: en los códigos nunca alterar el directorio de trabajo. Dejar que el directorio se fije según la carpeta en la que tenemos nuestro *script*.
+
+--
+
+Esto permite que el código corra sin problemas en cualquier computador. 
+
+--
+
+Cuando queremos importar una base de datos no establecemos el **directorio absoluto**, el cuál en general contiene el nombre personal de la computadora (en nuestro caso `C:/Users/nicol...`).
+
+--
+
+Simplemente le decimos *"busca el archivo X en la carpeta `input` o `data` del proyecto que tenemos abierto"*. Es un **directorio relativo**:
+
+```{r warning=FALSE}
+library(readr)
+esi <- read_csv2("data/esi-2019---personas.csv")
+
+```
+
+--
+
+En mi computadora, que tiene el directorio `C:/Users/nicol...`, no abriría un archivo que está con la ruta de Juanito: `C:/Users/Juanito/Desktop/data/esi-2019---personas.csv`.
+
+![](imagenes/error not exist directory.png)
+
 
 ---
 
@@ -132,19 +238,17 @@ Las funciones incluídas consideran un lenguaje bastante explícito:
 
 ```{r, warning=FALSE, eval=FALSE}
 library(haven)
-# El archivo se puede cargar desde una carpeta...
+# El archivo se puede cargar desde una carpeta según ruta absoluta
 esi <- read_dta(file = "C:/Users/usuario/Desktop/esi-2019---personas.dta")
+# El archivo se puede cargar desde una carpeta según ruta relativa
+esi <- read_dta(file = "data/esi-2019---personas.dta")
 # ...o desde un sitio web
 esi <- read_sav(file = "http://www.ine.cl/docs/default-source/encuesta-suplementaria-de-ingresos/bbdd/spss_esi/2019/esi-2019---personas.sav")
 ```
 
 --
 
-El argumento "file" en estas funciones indica la ruta y el nombre del 
-archivo a importar a **R**.
-
-La dirección del archivo debe utilizar **forward-slash** ("/") en vez de
-**backslash** ("\"). Otra opción es utilizar un doble **backslash** ("\\")
+El argumento "file" indica la ruta y el nombre del archivo a importar a **R**. La dirección del archivo debe utilizar **forward-slash** ("/") en vez de **backslash** ("\").
 
 ---
 
@@ -153,46 +257,6 @@ background-size: contain;
 background-position: 100% 0%
 
 # Importación de datos
-
-Si queremos trabajar con más de un archivo, y cada uno de ellos se encuentra 
-en la misma carpeta de nuestra computador, ¿es posible establecer un "atajo" 
-al momento de importar los archivos?
-
---
-
-- Directorio de trabajo
-
-El directorio o carpeta de trabajo es el lugar en nuestra computadora donde R 
-buscará archivos para importarlos y al que serán exportados.
-
---
-
-Para identificar cuál es la ruta del directorio que está usando R se debe 
-utilizar la función `getwd()`.
-
-```{r, warning=FALSE}
-getwd()
-```
-
---
-
-Es posible cambiar el directorio de trabajo usando la función `setwd()`.
-
-```{r, warning=FALSE, eval=FALSE}
-setwd("C:/Users/elgra/Desktop")
-```
-
----
-
-background-image: url("imagenes/fondo2.PNG")
-background-size: contain;
-background-position: 100% 0%
-
-# Importación de datos
-
-Volvamos a la importación de datos...
-
---
 
 - Importación de archivos de texto plano delimitados
 
@@ -221,6 +285,7 @@ Todas estas funciones tienen una sintaxis similar.
 
 ```{r, warning=FALSE, eval=FALSE}
 library(readr)
+## descargar base de https://www.ine.cl/estadisticas/sociales/ingresos-y-gastos/encuesta-suplementaria-de-ingresos
 esi <- read_csv2(file = "data/esi-2019---personas.csv")
 ```
 
@@ -295,9 +360,14 @@ No se debe asignar el valor al objeto a cargar.
 
 
 ```{r, warning=FALSE, eval=FALSE}
-load(file = "data/esi-2019---personas.RData")
+#esi <- read_csv2(file = "data/esi-2019---personas.csv")
+#esi2 <- read_csv2(file = "data/esi-2019---hogares-sin-becas.csv")
+#esi3 <- read_csv2(file = "data/esi-2019---hogares-con-becas.csv")
+#save(esi,esi2,esi3, file = "data/esi-2019.RData")
+load(file = "data/esi-2019.RData")
 ```
 
+![](imagenes/esiRData.png)
 
 ---
 
