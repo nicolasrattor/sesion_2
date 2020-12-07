@@ -75,7 +75,7 @@ Antes... revisaremos el **protocolo IPO** para organizar nuestro trabajo.
 
 ---
 
-background-image: url("imagenes/IPO.png")
+background-image: url("imagenes/IPO.PNG")
 background-size: cover
 class: center, bottom, inverse
 
@@ -99,7 +99,7 @@ Se basa en generar un conjunto de archivos auto-contenidos organizado en una est
 
 --
 
-![](imagenes/Estructura IPO.png)
+![](imagenes/Estructura IPO.PNG)
 
 --
 
@@ -173,7 +173,7 @@ esi <- read_csv2("data/esi-2019---personas.csv")
 
 En mi computadora, que tiene el directorio `C:/Users/nicol...`, no abriría un archivo que está con la ruta de Juanito: `C:/Users/Juanito/Desktop/data/esi-2019---personas.csv`.
 
-![](imagenes/error not exist directory.png)
+![](imagenes/error not exist directory.PNG)
 
 
 ---
@@ -367,7 +367,7 @@ No se debe asignar el valor al objeto a cargar.
 load(file = "data/esi-2019.RData")
 ```
 
-![](imagenes/esiRData.png)
+![](imagenes/esiRData.PNG)
 
 ---
 
