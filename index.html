@@ -119,7 +119,7 @@ getwd()
 ```
 
 ```
-## [1] "C:/Users/nicol/OneDrive - Instituto Nacional de Estadisticas/GitHub/Capacitaciones R al DET/sesion_2"
+## [1] "C:/Users/gonza/OneDrive/Documentos/GitHub/sesion_2"
 ```
 
 --
@@ -128,7 +128,7 @@ Es posible cambiar el directorio de trabajo usando la función `setwd()`.
 
 
 ```r
-setwd("C:/Users/nicol")
+#setwd("C:/Users/nicol")
 ```
 
 
@@ -171,6 +171,79 @@ En mi computadora, que tiene el directorio `C:/Users/nicol...`, no abriría un a
 
 ![](imagenes/error not exist directory.PNG)
 
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# R Projects
+
+Otra forma de solucionar el problema de los directorios absolutos y la replicabilidad de códigos en distintos computadores, es el uso de **R Projects** (`Rproj`).
+
+--
+
+El `Rproj` cumple la misma función que la **definición de un directorio de trabajo** mediante el comando *setwd()*, sólo que **de forma automática**, sin tener que escribir o modificar *absolutamente nada* del código original.
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# R Projects
+
+Para crear un **R Project**, debemos pinchar en: File &gt; New Project...
+
+.center[&lt;img src="https://rstudio.com/images/docs/projects_new.png" style="scale: 30%" /&gt;]
+
+--
+La recomendación es seleccionar *Existing Directory* y definir la carpeta con la que estamos trabajando como directorio de trabajo. 
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# R Projects
+
+RStudio creará inmediatamente un archivo con el nombre de la carpeta y con terminación `.Rproj` en su interior. 
+
+--
+
+**La presencia de ese archivo** al interior de la carpeta hará que RStudio **inmediatamente defina esa carpeta como directorio de trabajo**.
+
+--
+
+De esta forma, si queremos compartir una programación, **la otra persona no tendrá que modificar *absolutamente nada* ** en el código. Con el sólo hecho de abrir el archivo `.Rproj`, RStudio usará esa carpeta como directorio de trabajo.
+
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# R Projects
+
+Pensemos que esta es nuestra carpeta de trabajo.
+
+--
+
+.left[&lt;img src="imagenes/rproj.JPG" style="scale: 5%" /&gt;]
+
+--
+
+Y al interior del script .R tenemos la siguiente línea de código.
+
+
+```r
+prueba &lt;- load("Prueba_Datos.RData")
+```
+
+El código abrirá el archivo "Prueba_Datos.RData" en cualquier computador, sin rutas, dada la presencia del archivo `.Rproj` al interior de la carpeta.
 
 ---
 
@@ -580,13 +653,6 @@ Existen múltiples formas de seleccionar las columnas utilizando esta función.
 
 ```r
 library(dplyr)
-```
-
-```
-## Warning: package 'dplyr' was built under R version 3.6.3
-```
-
-```r
 head(select(ene, ano_encuesta, mes_encuesta, cae_especifico, b1, b14_rev4cl_caenes),
      n = 3) # el argumento n corresponde a la función "head"
 ```
@@ -1139,13 +1205,6 @@ Esta función se utiliza para reordenar las filas de un data frame.
 
 ```r
 library(guaguas)
-```
-
-```
-## Warning: package 'guaguas' was built under R version 3.6.3
-```
-
-```r
 head(guaguas %&gt;% arrange(desc(n)), n = 3)
 ```
 
