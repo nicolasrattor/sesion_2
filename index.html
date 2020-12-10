@@ -571,6 +571,17 @@ condiciones lógicas.
 
 - **`mutate()`**: añade nuevas variables o transforma variables existentes.
 
+--
+
+**Antes...** Una gran ayuda para encadenar funciones (**`%&gt;%`**)
+
+
+---
+
+background-image: url("imagenes/pipes.jpg")
+background-size: cover
+class: center, bottom, inverse
+
 ---
 
 background-image: url("imagenes/fondo2.PNG")
@@ -579,24 +590,89 @@ background-position: 100% 0%
 
 # Transformación de datos
 
-Todas estas funciones tienen en común una serie de argumentos:
+## Uso de **pipes** (**`%&gt;%`**)
+
+El operador **%&gt;%** nos permite tomar el resultado de una función y mandarlo 
+directamente a la siguiente función, concatenando acciones.
 
 --
 
-- El primer argumento es el data frame a manipular.
+Se puede leer como "luego" o "a continuación".
 
 --
 
-- Los otros argumentos describen qué hacer con el data frame especificado en el 
-primer argumento.
+Este operador nos ayudará enormemente a mejor la legibilidad de un código.
 
 --
 
-- El valor de retorno de la función es un nuevo data frame.
+El atajo en Windows para escribir `pipes` es: ctrl + shift + m.
+
+En Mac es: cmd + shift + m
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+Para utilizar los pipes, es necesario seguir la siguiente estructura:
+
+
+```r
+df %&gt;% # data frame sobre el que se ejecutará la función
+  funcion() %&gt;% # esta función se aplica sobre el data frame "df"
+  funcion() # esta función se aplica sobre el resultado de la función anterior
+```
 
 --
 
-Estas funciones serán algunas de nuestras mejores compañeras y siempre nos 
+Utilizando pipes, la forma de seleccionar columnas y observar filas puede pasar de esto:
+
+
+```r
+ene_1&lt;-ene[,c("idrph", "edad")]   ## variables con comillas
+head(ene_1,2)
+```
+
+```
+##    idrph edad
+## 1 808409   79
+## 2 808410   71
+```
+--
+
+A esto:
+--
+
+
+
+
+
+```r
+ene %&gt;% 
+     select(idrph, edad) %&gt;%   ## Función seleccionar variables (columnas)
+           head(2)                   ## Función seleccionar primeras 3 filas
+```
+
+```
+##    idrph edad
+## 1 808409   79
+## 2 808410   71
+```
+
+
+---
+
+background-image: url("imagenes/fondo2.PNG")
+background-size: contain;
+background-position: 100% 0%
+
+# Transformación de datos
+
+Volvamos a las funciones de manipulación de datos, 
+las que serán algunas de nuestras mejores compañeras y siempre nos 
 acompañarán en nuestro camino de programación.
 
 --
@@ -648,48 +724,38 @@ Existen múltiples formas de seleccionar las columnas utilizando esta función.
 
 --
 
-- Selección de las columnas a través del nombre de los campos.
+- Selección de las columnas a través del nombre de los campos (utilizando pipes).
 
 --
 
 
 ```r
-library(dplyr)
+ene %&gt;%    ## Escribimos la base de datos sobre la que aplicaremos la función 
+  select(ano_trimestre, mes_central, cae_especifico, b1, b14_rev4cl_caenes) %&gt;% ## Función
+  head(n = 2)  ## Otra función, para seleccionar las tres primeras filas
 ```
 
 ```
-## Warning: package 'dplyr' was built under R version 3.6.3
-```
-
-```r
-head(select(ene, ano_encuesta, mes_encuesta, cae_especifico, b1, b14_rev4cl_caenes),
-     n = 3) # el argumento n corresponde a la función "head"
-```
-
-```
-##   ano_encuesta mes_encuesta cae_especifico b1 b14_rev4cl_caenes
-## 1         2019           10             17 NA                NA
-## 2         2019           10             17 NA                NA
-## 3         2019           10              7  7                 2
+##   ano_trimestre mes_central cae_especifico b1 b14_rev4cl_caenes
+## 1          2019          11             17 NA                NA
+## 2          2019          11             17 NA                NA
 ```
 
 --
 
-- Selección de las columnas a través de la posición que ocupan en el data frame.
+- Selección de las columnas a través de la posición que ocupan en el data frame (sin pipes.
 
 --
 
 
 ```r
-head(select(ene, 1, 2, 3, 4, 5),
-     n = 3)
+head(select(ene, 1, 2, 3, 4, 5),n = 2)   ## Una función adentro de otra función
 ```
 
 ```
-##     idrph ano_trimestre mes_central id_identificacion id_directorio
-## 1  808409          2019          11            173296         21343
-## 2  808410          2019          11            173296         21343
-## 3 1100843          2019          11            235727         16373
+##    idrph ano_trimestre mes_central id_identificacion id_directorio
+## 1 808409          2019          11            173296         21343
+## 2 808410          2019          11            173296         21343
 ```
 
 ---
@@ -710,14 +776,13 @@ background-position: 100% 0%
 
 
 ```r
-head(select(ene, c(idrph:mes_central)), n = 3)
+ene %&gt;% select(idrph:mes_central) %&gt;% head(2)
 ```
 
 ```
-##     idrph ano_trimestre mes_central
-## 1  808409          2019          11
-## 2  808410          2019          11
-## 3 1100843          2019          11
+##    idrph ano_trimestre mes_central
+## 1 808409          2019          11
+## 2 808410          2019          11
 ```
 
 --
@@ -729,15 +794,26 @@ head(select(ene, c(idrph:mes_central)), n = 3)
 
 
 ```r
-head(select(ene, -c(4:length(ene))), n = 3)
+ene %&gt;% select(-c(4:length(ene))) %&gt;% head(2)
 ```
 
 ```
-##     idrph ano_trimestre mes_central
-## 1  808409          2019          11
-## 2  808410          2019          11
-## 3 1100843          2019          11
+##    idrph ano_trimestre mes_central
+## 1 808409          2019          11
+## 2 808410          2019          11
 ```
+
+--
+
+
+```r
+length(ene)
+```
+
+```
+## [1] 144
+```
+
 
 ---
 
@@ -889,116 +965,19 @@ names(ene_5)
 
 --
 
-...a través de `rename()`
+...a través de `rename()` y pipe
 
 --
 
 
 ```r
-names(rename(ene_5, identificador = idrph, niveleducacional = cine))
+ene_5 %&gt;% rename(identificador = idrph, niveleducacional = cine) %&gt;% names()
 ```
 
 ```
 ## [1] "identificador"    "edad"             "sex"              "niveleducacional"
 ```
 
----
-
-background-image: url("imagenes/fondo2.PNG")
-background-size: contain;
-background-position: 100% 0%
-
-# Transformación de datos
-
-## Uso de **pipes** (**`%&gt;%`**)
-
-Como hemos visto hasta ahora, estas funciones siguen la misma estructura:
-
-    - Primer argumento: data frame sobre el que se aplica la función.
-    
-    - Resto de argumentos: elementos del data frame sobre los cuales actua
-    la función.
-    
---
-
-Lo anterior nos puede hacer pensar: **¿es posible encadenar estas funciones?**.
-
---
-
-Si...
---
-si se puede, utilizando el operador **`%&gt;%`** (llamado **pipe**).
-
----
-
-background-image: url("imagenes/pipes.jpg")
-background-size: cover
-class: center, bottom, inverse
-
----
-
-background-image: url("imagenes/fondo2.PNG")
-background-size: contain;
-background-position: 100% 0%
-
-# Transformación de datos
-
-## Uso de **pipes** (**`%&gt;%`**)
-
-El operador **%&gt;%** nos permite tomar el resultado de una función y mandarlo 
-directamente a la siguiente función, concatenando acciones.
-
---
-
-Se puede leer como "luego" o "a continuación".
-
---
-
-Este operador nos ayudará enormemente a mejor la legibilidad de un código.
-
---
-
-El atajo en Windows para escribir `pipes` es: ctrl + shift + m.
-
-En Mac es: cmd + shift + m
-
----
-
-background-image: url("imagenes/fondo2.PNG")
-background-size: contain;
-background-position: 100% 0%
-
-# Transformación de datos
-
-## Uso de **pipes** (**`%&gt;%`**)
-
-Para utilizar los pipes, es necesario seguir la siguiente estructura:
-
-
-```r
-df %&gt;% # data frame sobre el que se ejecutará la función
-  funcion() %&gt;% # esta función se aplica sobre el data frame "df"
-  funcion() # esta función se aplica sobre el resultado de la función anterior
-```
-
---
-
-Utilizando pipes, el resultado del ejercicio de renombrar es posible escribirlo 
-de la siguiente manera:
-
---
-
-
-```r
-ene_6 &lt;- ene %&gt;%
-  select(idrph, edad, sexo, cine) %&gt;%
-  rename(identificador = idrph, niveleducacion = cine)
-names(ene_6)
-```
-
-```
-## [1] "identificador"  "edad"           "sexo"           "niveleducacion"
-```
 
 ---
 
