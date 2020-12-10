@@ -200,9 +200,10 @@ background-position: 100% 0%
 
 Para crear un **R Project**, debemos pinchar en: File > New Project...
 
-.center[<img src="https://rstudio.com/images/docs/projects_new.png" style="scale: 30%" />]
+![](https://rstudio.com/images/docs/projects_new.png)
 
 --
+
 La recomendación es seleccionar *Existing Directory* y definir la carpeta con la que estamos trabajando como directorio de trabajo. 
 
 ---
@@ -236,7 +237,8 @@ Pensemos que esta es nuestra carpeta de trabajo.
 
 --
 
-.left[<img src="imagenes/rproj.JPG" style="scale: 5%" />]
+![](imagenes/rproj.JPG)
+
 
 --
 

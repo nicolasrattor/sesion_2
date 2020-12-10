@@ -4,7 +4,7 @@
     <title>Capacitación en R</title>
     <meta charset="utf-8" />
     <meta name="author" content="" />
-    <meta name="date" content="2020-12-07" />
+    <meta name="date" content="2020-12-10" />
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
@@ -119,7 +119,7 @@ getwd()
 ```
 
 ```
-## [1] "C:/Users/gonza/OneDrive/Documentos/GitHub/sesion_2"
+## [1] "C:/Users/nicol/OneDrive - Instituto Nacional de Estadisticas/GitHub/Capacitaciones R al DET/sesion_2"
 ```
 
 --
@@ -196,9 +196,10 @@ background-position: 100% 0%
 
 Para crear un **R Project**, debemos pinchar en: File &gt; New Project...
 
-.center[&lt;img src="https://rstudio.com/images/docs/projects_new.png" style="scale: 30%" /&gt;]
+![](https://rstudio.com/images/docs/projects_new.png)
 
 --
+
 La recomendación es seleccionar *Existing Directory* y definir la carpeta con la que estamos trabajando como directorio de trabajo. 
 
 ---
@@ -232,7 +233,8 @@ Pensemos que esta es nuestra carpeta de trabajo.
 
 --
 
-.left[&lt;img src="imagenes/rproj.JPG" style="scale: 5%" /&gt;]
+![](imagenes/rproj.JPG)
+
 
 --
 
@@ -653,6 +655,13 @@ Existen múltiples formas de seleccionar las columnas utilizando esta función.
 
 ```r
 library(dplyr)
+```
+
+```
+## Warning: package 'dplyr' was built under R version 3.6.3
+```
+
+```r
 head(select(ene, ano_encuesta, mes_encuesta, cae_especifico, b1, b14_rev4cl_caenes),
      n = 3) # el argumento n corresponde a la función "head"
 ```
@@ -1205,6 +1214,13 @@ Esta función se utiliza para reordenar las filas de un data frame.
 
 ```r
 library(guaguas)
+```
+
+```
+## Warning: package 'guaguas' was built under R version 3.6.3
+```
+
+```r
 head(guaguas %&gt;% arrange(desc(n)), n = 3)
 ```
 
