@@ -1078,7 +1078,7 @@ Esta función se utiliza para reordenar las filas de un data frame.
 
 ```{r}
 library(guaguas)
-head(guaguas %>% arrange(desc(n)), n = 3)
+guaguas %>% arrange(desc(n)) %>% head(2)
 ```
 
 ---
@@ -1097,8 +1097,11 @@ Algunos ejercicios sobre lo visto hasta ahora en clases...
 nacimiento, y luego ordene el resultado por la variable "n", de forma 
 descendente.
 
-- Utilice la función "head", con el argumento "n == 5", e identifique cuantos 
-nombres de los 5 más repetidos comienzan con la letra "J".
+- Utilice la función "head", con el argumento "n = 5".
+
+--
+
+¿cuántos nombres de los 5 más repetidos comienzan con la letra "J".
 
 --
 

@@ -1,0 +1,41 @@
+---
+title: "Ejercicios - Sesión 2."
+subtitle: "Capacitación en R"
+author: "Capacitadores DET, en base a PE SCPE"
+output: pdf_document
+header-includes:
+- \usepackage[fontsize=11.8pt]{scrextend}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Ejercicios - Sesión 2
+
+
+## Ejercicio 1 
+
+Importar la base ene-2019-11.csv.
+
+
+## Ejericio 2 
+
+Seleccionar las variables: idrph, edad, sexo, b1 y las variables cuyo nombre comienza con "cae_"
+
+
+## Ejercicio 3 
+
+Renombrar la variable cae_especifico por cse_especifico.
+
+## Ejercicio 4
+
+Generar la variable tipo_ocupado en base a las siguientes reglas:
+
++ Asignarle el valor "presente" en caso que la variable cse_especifico se encuentre entre 1 y 4 (valores extremos incluidos).
+
++ Asignarle el valor "ausente" en caso que la variable cse_especifico se encuentre entre 5 y 7 (extremos incluidos).
+
++ Asignarle el valor "no ocupado" en cualquier otro caso.
+
+Obtener el número de ocupados ausentes codificados como "Directivos y Gerentes" (b1 == 1).
