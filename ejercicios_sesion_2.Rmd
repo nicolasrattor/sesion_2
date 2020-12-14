@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Ejercicio 1 
 
-Importar la base ene-2019-11.csv.
+Importar la base ene-2019-11.csv. Link en [página de INE](https://www.ine.cl/docs/default-source/ocupacion-y-desocupacion/bbdd/2019/formato-csv/ene-2019-11.csv?sfvrsn=6f231878_6&download=true).
 
 
 ## Ejericio 2 
@@ -27,6 +27,7 @@ Seleccionar las variables: idrph, edad, sexo, b1 y las variables cuyo nombre com
 ## Ejercicio 3 
 
 Renombrar la variable cae_especifico por cse_especifico.
+
 
 ## Ejercicio 4
 
@@ -39,3 +40,8 @@ Generar la variable tipo_ocupado en base a las siguientes reglas:
 + Asignarle el valor "no ocupado" en cualquier otro caso.
 
 Obtener el número de ocupados ausentes codificados como "Directivos y Gerentes" (b1 == 1).
+
+
+# Sobre el envío
+
+Enviar a más tardar el día lunes 14 de diciembre a las 17:00. Enviar ejercicios como archivo .R (script) a los correos `nicolas.ratto@ine.cl` y `gonzalo.franetovic@ine.cl`
