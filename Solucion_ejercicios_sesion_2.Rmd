@@ -38,10 +38,13 @@ ene <- read.csv("data/ene-2019-11.csv")
 Seleccionar las variables: idrph, edad, sexo, b1 y las variables cuyo nombre comienza con "cae_"
 
 ```{r}
-ene %>% 
+#Selección de variables
+ene = ene %>% 
   select(idrph, edad, sexo, b1, starts_with("cae_")) %>% 
   head(5)
 
+#Previsualización de objeto
+ene
 ```
 
 *El uso de la función head() no es necesaria.*
@@ -105,7 +108,7 @@ table(ene$tipo_ocupado)
 ## Valores del 1 al 4 (presente):
 sum(38524+421+1114+81)
 
-## Valores del 1 al 7 (ausente):
+## Valores del 5 al 7 (ausente):
 sum(1724+782+210)
 
 ## Valores restantes (no ocupado):
@@ -120,23 +123,23 @@ Obtener el número de ocupados ausentes codificados como "Directivos y Gerentes"
 ```{r}
 
 ## Se aplica el filtro.
-directivos <- ene %>% 
-  filter(b1 == 1) 
+ausentes_directivos <- ene %>% 
+  filter(tipo_ocupado=="ausente" & b1==1) 
 
 ## Muchas opciones para obtener la respuesta
 
 ## Función dim()
-dim(directivos)  
+dim(ausentes_directivos)  
 
 ## Función nrow()
-nrow(directivos) 
+nrow(ausentes_directivos) 
 
 ## Función count()
-directivos %>% 
+ausentes_directivos %>% 
   count() 
 
 ## Función tally()
-directivos %>% 
+ausentes_directivos %>% 
   tally() 
 
 ```
