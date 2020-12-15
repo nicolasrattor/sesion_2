@@ -1,5 +1,5 @@
 ---
-title: "Solución ejercicios - Sesión 2."
+title: "Solución ejercicios - Sesión 2"
 subtitle: "Capacitación en R"
 author: "Capacitadores DET, en base a PE SCPE"
 output: pdf_document
@@ -11,64 +11,72 @@ header-includes:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Ejercicios - Sesión 2
+# Pasos previos
 
-```{r}
-## Como primer paso se cargan los paquetes necesarios para la actividad
+## Paquetes
 
+```{r, message=FALSE}
+## Se cargan los paquetes necesarios para la actividad
 library(dplyr)
 ```
 
+# Ejercicio 1 
 
-## Ejercicio 1 
-
-Importar la base ene-2019-11.csv.
+**Importar la base ene-2019-11.csv.**
 
 ```{r}
 ## La base se descarga y se guarda en la carpeta de "inputs" llamada "data" 
-ene <- read.csv(file = "data/ene-2019-11.csv")
-
-## El ejercicio no es del todo correcto si la lectura de la base solo funciona 
-# desde la computadora de quien hizo la tarea.
+ene <- read.csv("data/ene-2019-11.csv")
 
 ```
 
+El ejercicio no es del todo correcto si la lectura de la base solo funciona desde la computadora de quien hizo la tarea.
 
-## Ejericio 2 
 
-Seleccionar las variables: idrph, edad, sexo, b1 y las variables cuyo nombre comienza con "cae_"
+# Ejericio 2 
+
+**Seleccionar las variables: idrph, edad, sexo, b1 y las variables cuyo nombre comienza con "cae_"**
 
 ```{r}
-ene %>% select(idrph, edad, sexo, b1,starts_with("cae_")) %>% head(5)
+ene %>% 
+  select(idrph, edad, sexo, b1, starts_with("cae_")) %>% 
+  head(5)
 
-## El uso de la función head() no es necesaria.
-
-## El ejercicio no es del todo correcto si las variables "cae_general" y 
-# "cae_especifico" fueron llamadas directamente con la función select, 
-# sin mediar "starts_with". 
 ```
 
+El uso de la función head() no es necesaria.
 
-## Ejercicio 3 
+El ejercicio no es del todo correcto si las variables "cae_general" y "cae_especifico" fueron llamadas directamente con la función select, sin mediar "starts_with".
 
-Renombrar la variable cae_especifico por cse_especifico.
+# Ejercicio 3 
+
+**Renombrar la variable cae_especifico por cse_especifico.**
 
 ```{r}
 
-ene<-ene %>% mutate(cse_especifico=cae_especifico) 
+#Previsualización de variable original
+ene %>% 
+  head(5) %>% 
+  select(idrph, cae_especifico)
 
-ene %>% head(5) %>% select(idrph,cse_especifico,cae_especifico)
+#Renombrar
+ene <- ene %>% 
+  rename(cse_especifico = cae_especifico) 
 
-## El uso de head() y select() no es obligatorio.
+#Previsualización de variable nueva
+ene %>% 
+  head(5) %>% 
+  select(idrph, cse_especifico)
 
-## Recuerde asignar la modificación al objeto ene, 
-# ya que cse_especifico será ocupada en ejercicio posterior.
 ```
 
+El uso de head() y select() no es obligatorio.
 
-## Ejercicio 4
+Recuerde asignar la modificación al objeto ene, ya que cse_especifico será ocupada en ejercicio posterior.
 
-Generar la variable tipo_ocupado en base a las siguientes reglas:
+# Ejercicio 4
+
+**Generar la variable tipo_ocupado en base a las siguientes reglas:**
 
 + Asignarle el valor "presente" en caso que la variable cse_especifico se encuentre entre 1 y 4 (valores extremos incluidos).
 
@@ -77,23 +85,20 @@ Generar la variable tipo_ocupado en base a las siguientes reglas:
 + Asignarle el valor "no ocupado" en cualquier otro caso.
 
 ```{r}
+#Distribución de variable de interés
 table(ene$cse_especifico)
 ```
 
-
 ```{r}
-ene<-ene %>% mutate(tipo_ocupado=if_else(condition = cse_especifico>=1&
-                                           cse_especifico<=4,
-                                    true = "presente",
-                                    false="no ocupado"),
+#Generación de nueva variable con mutate() e if_else()
+ene <- ene %>% 
+  mutate(tipo_ocupado = if_else(cse_especifico>=1 & 
+                                  cse_especifico<=4, "presente", "no ocupado"),
+         tipo_ocupado = if_else(tipo_ocupado=="no ocupado" & 
+                                  cse_especifico>=5 & 
+                                  cse_especifico<=7, "ausente", tipo_ocupado))
 
-               tipo_ocupado=if_else(condition = tipo_ocupado=="no ocupado" & 
-                                      cse_especifico>=5 & 
-                                      cse_especifico<=7,
-                                    true="ausente",
-                                    false=tipo_ocupado))
-
-## Tabulado para observar el resultado.
+## Tabulado para observar el resultado
 table(ene$tipo_ocupado)
 
 ## Comprobemos...
@@ -103,26 +108,36 @@ sum(38524+421+1114+81)
 ## Valores del 1 al 7 (ausente):
 sum(1724+782+210)
 
-## restante valores (no ocupado):
+## Valores restantes (no ocupado):
 sum(18283,2584,397,154,243,1113,6504,982,7346,256,
     3611,150,3708,212,3670,205,523,1637,497,512,620,177)
 
 ## Todo en orden.
 ```
 
-
-Obtener el número de ocupados ausentes codificados como "Directivos y Gerentes" (b1 == 1).
+**Obtener el número de ocupados ausentes codificados como "Directivos y Gerentes" (b1 == 1).**
 
 ```{r}
 
 ## Se aplica el filtro.
-directivos<-ene %>% filter(b1 == 1) 
+directivos <- ene %>% 
+  filter(b1 == 1) 
 
 ## Muchas opciones para obtener la respuesta
-dim(directivos)  ## función dim()
-nrow(directivos) ## función nrow()
-directivos %>% count() ## función count()
-directivos %>% tally() ## función tally()
+
+## Función dim()
+dim(directivos)  
+
+## Función nrow()
+nrow(directivos) 
+
+## Función count()
+directivos %>% 
+  count() 
+
+## Función tally()
+directivos %>% 
+  tally() 
 
 ```
 
