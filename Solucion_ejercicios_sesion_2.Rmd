@@ -40,11 +40,11 @@ Seleccionar las variables: idrph, edad, sexo, b1 y las variables cuyo nombre com
 ```{r}
 #Selección de variables
 ene = ene %>% 
-  select(idrph, edad, sexo, b1, starts_with("cae_")) %>% 
-  head(5)
+  select(idrph, edad, sexo, b1, starts_with("cae_")) 
 
 #Previsualización de objeto
-ene
+ene %>% 
+  head(5)
 ```
 
 *El uso de la función head() no es necesaria.*
