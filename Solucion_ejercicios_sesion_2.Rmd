@@ -22,7 +22,7 @@ library(dplyr)
 
 # Ejercicio 1 
 
-**Importar la base ene-2019-11.csv.**
+Importar la base ene-2019-11.csv.
 
 ```{r}
 ## La base se descarga y se guarda en la carpeta de "inputs" llamada "data" 
@@ -30,12 +30,12 @@ ene <- read.csv("data/ene-2019-11.csv")
 
 ```
 
-El ejercicio no es del todo correcto si la lectura de la base solo funciona desde la computadora de quien hizo la tarea.
+*El ejercicio no es del todo correcto si la lectura de la base solo funciona desde la computadora de quien hizo la tarea.*
 
 
-# Ejericio 2 
+# Ejercicio 2 
 
-**Seleccionar las variables: idrph, edad, sexo, b1 y las variables cuyo nombre comienza con "cae_"**
+Seleccionar las variables: idrph, edad, sexo, b1 y las variables cuyo nombre comienza con "cae_"
 
 ```{r}
 ene %>% 
@@ -44,13 +44,13 @@ ene %>%
 
 ```
 
-El uso de la función head() no es necesaria.
+*El uso de la función head() no es necesaria.*
 
-El ejercicio no es del todo correcto si las variables "cae_general" y "cae_especifico" fueron llamadas directamente con la función select, sin mediar "starts_with".
+*El ejercicio no es del todo correcto si las variables "cae_general" y "cae_especifico" fueron llamadas directamente con la función select, sin mediar "starts_with".*
 
 # Ejercicio 3 
 
-**Renombrar la variable cae_especifico por cse_especifico.**
+Renombrar la variable cae_especifico por cse_especifico.
 
 ```{r}
 
@@ -70,13 +70,13 @@ ene %>%
 
 ```
 
-El uso de head() y select() no es obligatorio.
+*El uso de head() y select() no es obligatorio.*
 
-Recuerde asignar la modificación al objeto ene, ya que cse_especifico será ocupada en ejercicio posterior.
+*Recuerde asignar la modificación al objeto ene, ya que cse_especifico será ocupada en ejercicio posterior.*
 
 # Ejercicio 4
 
-**Generar la variable tipo_ocupado en base a las siguientes reglas:**
+Generar la variable tipo_ocupado en base a las siguientes reglas:
 
 + Asignarle el valor "presente" en caso que la variable cse_especifico se encuentre entre 1 y 4 (valores extremos incluidos).
 
@@ -115,7 +115,7 @@ sum(18283,2584,397,154,243,1113,6504,982,7346,256,
 ## Todo en orden.
 ```
 
-**Obtener el número de ocupados ausentes codificados como "Directivos y Gerentes" (b1 == 1).**
+Obtener el número de ocupados ausentes codificados como "Directivos y Gerentes" (b1 == 1).
 
 ```{r}
 
