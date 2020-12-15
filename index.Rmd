@@ -779,7 +779,7 @@ texto definida.
 - **ends_with()**: selecciona variables cuyo nombre termina con la cadena de 
 texto definida,
 
-- **start_with()**: selecciona variables cuyo nombre comienza con la cadena de 
+- **starts_with()**: selecciona variables cuyo nombre comienza con la cadena de 
 texto definida,
 
 - **matches()**: selecciona las variables cuyos nombres coinciden con una 
